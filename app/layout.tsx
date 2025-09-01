@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
+import type { ReactNode } from "react";
 
 export const metadata: Metadata = {
   title: "Next.js App",
@@ -9,12 +11,12 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
       <body className="antialiased">
-        {children}
+        <NuqsAdapter>{children}</NuqsAdapter>
       </body>
     </html>
   );
