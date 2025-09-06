@@ -4,9 +4,10 @@ import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
 import { useCallback, useTransition } from "react";
 import CategoryInput from "./CategoryInput";
 import Counter from "./Counter";
+import Pagination from "./Pagination";
 
 const FilterPanel = () => {
-  const [isPending, startTransition] = useTransition();
+  const [_, startTransition] = useTransition();
   const [category, setCategory] = useQueryState(
     "category",
     parseAsString
@@ -49,6 +50,7 @@ const FilterPanel = () => {
         <div className="flex justify-center">
           <Counter value={count} onChange={setCountCallback} />
         </div>
+        <Pagination />
       </div>
     </div>
   );
