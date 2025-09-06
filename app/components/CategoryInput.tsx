@@ -4,7 +4,7 @@ import { memo } from "react";
 
 type Props = {
   value: string;
-  onChange: (value: string) => void;
+  onChange: (fn: (prev: string) => string) => void;
 };
 
 const CategoryInput = memo(({ value, onChange }: Props) => {
@@ -17,7 +17,7 @@ const CategoryInput = memo(({ value, onChange }: Props) => {
         id="category"
         type="text"
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(() => e.target.value)}
         className="border rounded px-2 py-1 text-black"
       />
     </div>

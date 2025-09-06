@@ -1,19 +1,19 @@
 "use client";
 
-import { parseAsIndex, useQueryState } from "nuqs";
+import { memo } from "react";
 
-const Pagination = () => {
-  const [page, setPage] = useQueryState(
-    "page",
-    parseAsIndex.withDefault(0).withOptions({ shallow: false, scroll: false }),
-  );
+type Props = {
+  page: number;
+  onChange: (fn: (prev: number) => number) => void;
+};
 
+const Pagination = memo(({ page, onChange }: Props) => {
   const handlePrev = () => {
-    setPage((prev: number) => Math.max(prev - 1, 0));
+    onChange((prev: number) => Math.max(prev - 1, 0));
   };
 
   const handleNext = () => {
-    setPage((prev: number) => prev + 1);
+    onChange((prev: number) => prev + 1);
   };
 
   return (
@@ -36,6 +36,6 @@ const Pagination = () => {
       </button>
     </div>
   );
-};
+});
 
 export default Pagination;
