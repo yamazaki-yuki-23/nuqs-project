@@ -1,20 +1,18 @@
 "use client";
 
-import { parseAsString, useQueryState } from "nuqs";
-import { useTransition } from "react";
+import { memo, useTransition } from "react";
 
-const CategoryInput = () => {
+type CategoryInputProps = {
+  category: string;
+  setCategory: (value: string) => void;
+};
+
+const CategoryInput = memo(({ category, setCategory }: CategoryInputProps) => {
   const [_, startTransition] = useTransition();
-  const [category, setCategory] = useQueryState(
-    "category",
-    parseAsString
-      .withDefault("")
-      .withOptions({ shallow: false, scroll: false }),
-  );
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     startTransition(() => {
-      setCategory(() => e.target.value);
+      setCategory(e.target.value);
     });
   };
 
@@ -32,6 +30,6 @@ const CategoryInput = () => {
       />
     </div>
   );
-};
+});
 
 export default CategoryInput;

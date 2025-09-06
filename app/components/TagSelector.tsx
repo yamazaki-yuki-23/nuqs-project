@@ -1,37 +1,30 @@
 "use client";
 
-import { createParser, useQueryState } from "nuqs";
-import { useCallback, useTransition } from "react";
+import { memo, useCallback, useTransition } from "react";
 
 const TAGS = ["React", "Next.js", "nuqs", "TypeScript", "Tailwind"];
 
-const parseAsTags = createParser<string[]>({
-  parse: (value) => (value ? value.split("+") : []),
-  serialize: (value) => value.join("+"),
-});
+type TagSelectorProps = {
+  tags: string[];
+  setTags: (value: string[] | null) => void;
+};
 
-const TagSelector = () => {
+const TagSelector = memo(({ tags, setTags }: TagSelectorProps) => {
   const [_, startTransition] = useTransition();
-  const [tags, setTags] = useQueryState(
-    "tags",
-    parseAsTags.withDefault([]).withOptions({ shallow: false, scroll: false }),
-  );
 
   const handleChange = useCallback(
     (tag: string) => {
       startTransition(() => {
-        setTags((prev) => {
-          const arr = prev ?? [];
-          if (arr.includes(tag)) {
-            const next = arr.filter((t) => t !== tag);
-            return next.length === 0 ? null : next;
-          } else {
-            return [...arr, tag];
-          }
-        });
+        const arr = tags ?? [];
+        if (arr.includes(tag)) {
+          const next = arr.filter((t) => t !== tag);
+          setTags(next.length === 0 ? null : next);
+        } else {
+          setTags([...arr, tag]);
+        }
       });
     },
-    [setTags],
+    [tags, setTags],
   );
 
   return (
@@ -52,6 +45,6 @@ const TagSelector = () => {
       </div>
     </div>
   );
-};
+});
 
 export default TagSelector;

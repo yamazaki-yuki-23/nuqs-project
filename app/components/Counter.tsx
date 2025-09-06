@@ -1,30 +1,28 @@
 "use client";
 
-import { parseAsInteger, useQueryState } from "nuqs";
-import { useTransition } from "react";
+import { memo, useTransition } from "react";
 
-const Counter = () => {
+type CounterProps = {
+  count: number;
+  setCount: (value: number | null) => void;
+};
+
+const Counter = memo(({ count, setCount }: CounterProps) => {
   const [_, startTransition] = useTransition();
-  const [count, setCount] = useQueryState(
-    "count",
-    parseAsInteger
-      .withDefault(0)
-      .withOptions({ shallow: false, scroll: false }),
-  );
 
   const handleDecrement = () => {
     startTransition(() => {
-      setCount((prev) => prev - 1);
+      setCount(count - 1);
     });
   };
   const handleIncrement = () => {
     startTransition(() => {
-      setCount((prev) => prev + 1);
+      setCount(count + 1);
     });
   };
   const handleReset = () => {
     startTransition(() => {
-      setCount(() => null);
+      setCount(null);
     });
   };
 
@@ -56,6 +54,6 @@ const Counter = () => {
       </div>
     </div>
   );
-};
+});
 
 export default Counter;

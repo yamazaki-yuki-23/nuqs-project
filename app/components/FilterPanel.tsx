@@ -2,13 +2,57 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  createParser,
+  parseAsIndex,
+  parseAsInteger,
+  parseAsString,
+  useQueryStates,
+} from "nuqs";
+import { useCallback } from "react";
 import CategoryInput from "./CategoryInput";
 import Counter from "./Counter";
 import Pagination from "./Pagination";
 import TagSelector from "./TagSelector";
 
+const parseAsTags = createParser<string[]>({
+  parse: (value) => (value ? value.split("+") : []),
+  serialize: (value) => value.join("+"),
+});
+
 const FilterPanel = () => {
   const pathname = usePathname();
+  const [states, setStates] = useQueryStates({
+    category: parseAsString
+      .withDefault("")
+      .withOptions({ shallow: false, scroll: false }),
+    tags: parseAsTags
+      .withDefault([])
+      .withOptions({ shallow: false, scroll: false }),
+    count: parseAsInteger
+      .withDefault(0)
+      .withOptions({ shallow: false, scroll: false }),
+    page: parseAsIndex
+      .withDefault(0)
+      .withOptions({ shallow: false, scroll: false }),
+  });
+
+  const setCategory = useCallback(
+    (value: string) => setStates((prev) => ({ ...prev, category: value })),
+    [setStates],
+  );
+  const setTags = useCallback(
+    (value: string[] | null) => setStates((prev) => ({ ...prev, tags: value })),
+    [setStates],
+  );
+  const setCount = useCallback(
+    (value: number | null) => setStates((prev) => ({ ...prev, count: value })),
+    [setStates],
+  );
+  const setPage = useCallback(
+    (value: number) => setStates((prev) => ({ ...prev, page: value })),
+    [setStates],
+  );
 
   return (
     <div className="w-full max-w-md mx-auto mb-8 p-6 bg-white dark:bg-gray-900 rounded-xl shadow flex flex-col gap-6 border border-gray-200 dark:border-gray-700">
@@ -16,13 +60,13 @@ const FilterPanel = () => {
         フィルター
       </h2>
       <div className="flex flex-col gap-4">
-        <CategoryInput />
-        <TagSelector />
+        <CategoryInput category={states.category} setCategory={setCategory} />
+        <TagSelector tags={states.tags} setTags={setTags} />
         <hr className="my-2 border-gray-300 dark:border-gray-700" />
         <div className="flex justify-center">
-          <Counter />
+          <Counter count={states.count} setCount={setCount} />
         </div>
-        <Pagination />
+        <Pagination page={states.page} setPage={setPage} />
         <Link
           href={pathname}
           scroll={false}

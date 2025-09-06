@@ -1,24 +1,24 @@
 "use client";
 
-import { parseAsIndex, useQueryState } from "nuqs";
-import { useTransition } from "react";
+import { memo, useTransition } from "react";
 
-const Pagination = () => {
+type PaginationProps = {
+  page: number;
+  setPage: (value: number) => void;
+};
+
+const Pagination = memo(({ page, setPage }: PaginationProps) => {
   const [_, startTransition] = useTransition();
-  const [page, setPage] = useQueryState(
-    "page",
-    parseAsIndex.withDefault(0).withOptions({ shallow: false, scroll: false }),
-  );
 
   const handlePrev = () => {
     startTransition(() => {
-      setPage((prev) => Math.max(prev - 1, 0));
+      setPage(Math.max(page - 1, 0));
     });
   };
 
   const handleNext = () => {
     startTransition(() => {
-      setPage((prev) => prev + 1);
+      setPage(page + 1);
     });
   };
 
@@ -42,6 +42,6 @@ const Pagination = () => {
       </button>
     </div>
   );
-};
+});
 
 export default Pagination;
