@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useCallback, useTransition } from "react";
+import { memo, useCallback } from "react";
 
 const TAGS = ["React", "Next.js", "nuqs", "TypeScript", "Tailwind"];
 
@@ -10,19 +10,15 @@ type TagSelectorProps = {
 };
 
 const TagSelector = memo(({ tags, setTags }: TagSelectorProps) => {
-  const [_, startTransition] = useTransition();
-
   const handleChange = useCallback(
     (tag: string) => {
-      startTransition(() => {
-        const arr = tags ?? [];
-        if (arr.includes(tag)) {
-          const next = arr.filter((t) => t !== tag);
-          setTags(next.length === 0 ? null : next);
-        } else {
-          setTags([...arr, tag]);
-        }
-      });
+      const arr = tags ?? [];
+      if (arr.includes(tag)) {
+        const next = arr.filter((t) => t !== tag);
+        setTags(next.length === 0 ? null : next);
+      } else {
+        setTags([...arr, tag]);
+      }
     },
     [tags, setTags],
   );

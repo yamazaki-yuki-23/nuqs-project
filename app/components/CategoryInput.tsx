@@ -1,6 +1,6 @@
 "use client";
 
-import { memo, useTransition } from "react";
+import { memo } from "react";
 
 type CategoryInputProps = {
   category: string;
@@ -8,14 +8,6 @@ type CategoryInputProps = {
 };
 
 const CategoryInput = memo(({ category, setCategory }: CategoryInputProps) => {
-  const [_, startTransition] = useTransition();
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    startTransition(() => {
-      setCategory(e.target.value);
-    });
-  };
-
   return (
     <div className="flex gap-4 items-center">
       <label htmlFor="category" className="font-medium">
@@ -25,7 +17,7 @@ const CategoryInput = memo(({ category, setCategory }: CategoryInputProps) => {
         id="category"
         type="text"
         value={category}
-        onChange={handleChange}
+        onChange={(e) => setCategory(e.target.value)}
         className="border rounded px-2 py-1 text-black"
       />
     </div>
