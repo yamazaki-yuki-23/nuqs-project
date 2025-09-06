@@ -1,23 +1,37 @@
 "use client";
 
-import { memo, useCallback } from "react";
+import { createParser, useQueryState } from "nuqs";
+import { useCallback, useTransition } from "react";
 
 const TAGS = ["React", "Next.js", "nuqs", "TypeScript", "Tailwind"];
 
-type Props = {
-  value: string[];
-  onChange: (fn: (prev: string[]) => string[]) => void;
-};
+const parseAsTags = createParser<string[]>({
+  parse: (value) => (value ? value.split("+") : []),
+  serialize: (value) => value.join("+"),
+});
 
-const TagSelector = memo(({ value, onChange }: Props) => {
+const TagSelector = () => {
+  const [_, startTransition] = useTransition();
+  const [tags, setTags] = useQueryState(
+    "tags",
+    parseAsTags.withDefault([]).withOptions({ shallow: false, scroll: false }),
+  );
+
   const handleChange = useCallback(
     (tag: string) => {
-      onChange((prev) => {
-        const arr = prev ?? [];
-        return arr.includes(tag) ? arr.filter((t) => t !== tag) : [...arr, tag];
+      startTransition(() => {
+        setTags((prev) => {
+          const arr = prev ?? [];
+          if (arr.includes(tag)) {
+            const next = arr.filter((t) => t !== tag);
+            return next.length === 0 ? null : next;
+          } else {
+            return [...arr, tag];
+          }
+        });
       });
     },
-    [onChange],
+    [setTags],
   );
 
   return (
@@ -28,7 +42,7 @@ const TagSelector = memo(({ value, onChange }: Props) => {
           <label key={tag} className="flex items-center gap-1 cursor-pointer">
             <input
               type="checkbox"
-              checked={(value ?? []).includes(tag)}
+              checked={(tags ?? []).includes(tag)}
               onChange={() => handleChange(tag)}
               className="accent-blue-500"
             />
@@ -38,6 +52,6 @@ const TagSelector = memo(({ value, onChange }: Props) => {
       </div>
     </div>
   );
-});
+};
 
 export default TagSelector;

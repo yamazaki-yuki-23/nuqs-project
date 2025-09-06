@@ -1,41 +1,61 @@
 "use client";
 
-import { memo } from "react";
+import { parseAsInteger, useQueryState } from "nuqs";
+import { useTransition } from "react";
 
-type Props = {
-  value: number;
-  onChange: (fn: (prev: number) => number) => void;
-};
+const Counter = () => {
+  const [_, startTransition] = useTransition();
+  const [count, setCount] = useQueryState(
+    "count",
+    parseAsInteger
+      .withDefault(0)
+      .withOptions({ shallow: false, scroll: false }),
+  );
 
-const Counter = memo(({ value, onChange }: Props) => {
+  const handleDecrement = () => {
+    startTransition(() => {
+      setCount((prev) => prev - 1);
+    });
+  };
+  const handleIncrement = () => {
+    startTransition(() => {
+      setCount((prev) => prev + 1);
+    });
+  };
+  const handleReset = () => {
+    startTransition(() => {
+      setCount(() => null);
+    });
+  };
+
   return (
     <div className="flex flex-col items-center gap-2 p-4 bg-white dark:bg-gray-900 rounded shadow">
-      <span className="text-lg font-bold">カウンター: {value}</span>
+      <span className="text-lg font-bold">カウンター: {count}</span>
       <div className="flex gap-2">
         <button
           type="button"
           className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={() => onChange((prev) => prev - 1)}
+          onClick={handleDecrement}
         >
           -
         </button>
         <button
           type="button"
           className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-          onClick={() => onChange((prev) => prev + 1)}
+          onClick={handleIncrement}
         >
           +
         </button>
         <button
           type="button"
           className="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500"
-          onClick={() => onChange(() => 0)}
+          onClick={handleReset}
         >
           リセット
         </button>
       </div>
     </div>
   );
-});
+};
 
 export default Counter;

@@ -1,13 +1,23 @@
 "use client";
 
-import { memo } from "react";
+import { parseAsString, useQueryState } from "nuqs";
+import { useTransition } from "react";
 
-type Props = {
-  value: string;
-  onChange: (fn: (prev: string) => string) => void;
-};
+const CategoryInput = () => {
+  const [_, startTransition] = useTransition();
+  const [category, setCategory] = useQueryState(
+    "category",
+    parseAsString
+      .withDefault("")
+      .withOptions({ shallow: false, scroll: false }),
+  );
 
-const CategoryInput = memo(({ value, onChange }: Props) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    startTransition(() => {
+      setCategory(() => e.target.value);
+    });
+  };
+
   return (
     <div className="flex gap-4 items-center">
       <label htmlFor="category" className="font-medium">
@@ -16,12 +26,12 @@ const CategoryInput = memo(({ value, onChange }: Props) => {
       <input
         id="category"
         type="text"
-        value={value}
-        onChange={(e) => onChange(() => e.target.value)}
+        value={category}
+        onChange={handleChange}
         className="border rounded px-2 py-1 text-black"
       />
     </div>
   );
-});
+};
 
 export default CategoryInput;
