@@ -1,24 +1,27 @@
 import FilterPanel from "./components/FilterPanel";
 
-const Home = () => {
+type Props = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+const Page = async ({ searchParams }: Props) => {
+  const params = await searchParams;
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
-      <FilterPanel />
-      <main className="text-center space-y-6">
-        <h1 className="text-4xl font-bold text-foreground mb-4">
-          Welcome to Next.js
+      <main className="w-full max-w-md mx-auto space-y-6">
+        <h1 className="text-3xl font-bold text-center text-foreground mb-4">
+          nuqs検索アプリ
         </h1>
-        <p className="text-lg text-foreground/80 max-w-md">
-          This is a simple Next.js application with Tailwind CSS styling.
-        </p>
-        <div className="bg-blue-100 dark:bg-blue-900 p-4 rounded-lg">
-          <p className="text-blue-800 dark:text-blue-200">
-            Start building your amazing application!
-          </p>
+        <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded shadow">
+          <h3 className="text-lg font-bold mb-2">検索結果：</h3>
+          <pre className="text-xs text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-900 rounded p-2 overflow-x-auto">
+            {JSON.stringify(params, null, 2)}
+          </pre>
         </div>
+        <FilterPanel />
       </main>
     </div>
   );
 };
 
-export default Home;
+export default Page;

@@ -1,21 +1,42 @@
 "use client";
 
-import { parseAsInteger, useQueryState } from "nuqs";
-import { useCallback } from "react";
+import { parseAsInteger, parseAsString, useQueryState } from "nuqs";
+import { useCallback, useTransition } from "react";
 import CategoryInput from "./CategoryInput";
 import Counter from "./Counter";
 
 const FilterPanel = () => {
-  const [category, setCategory] = useQueryState("category", {
-    defaultValue: "",
-  });
+  const [isPending, startTransition] = useTransition();
+  const [category, setCategory] = useQueryState(
+    "category",
+    parseAsString
+      .withDefault("")
+      .withOptions({ shallow: false, scroll: false }),
+  );
   const [count, setCount] = useQueryState(
     "count",
-    parseAsInteger.withDefault(0),
+    parseAsInteger
+      .withDefault(0)
+      .withOptions({ shallow: false, scroll: false }),
   );
 
-  const setCategoryCallback = useCallback(setCategory, []);
-  const setCountCallback = useCallback(setCount, []);
+  const setCategoryCallback = useCallback(
+    (value: string) => {
+      startTransition(() => {
+        setCategory(value);
+      });
+    },
+    [setCategory],
+  );
+
+  const setCountCallback = useCallback(
+    (value: number | ((prev: number) => number)) => {
+      startTransition(() => {
+        setCount(value);
+      });
+    },
+    [setCount],
+  );
 
   return (
     <div className="w-full max-w-md mx-auto mb-8 p-6 bg-white dark:bg-gray-900 rounded-xl shadow flex flex-col gap-6 border border-gray-200 dark:border-gray-700">
