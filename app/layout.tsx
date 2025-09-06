@@ -8,11 +8,11 @@ export const metadata: Metadata = {
   description: "A simple Next.js application",
 };
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: ReactNode;
-}>) {
+}>) => {
   return (
     <html lang="en">
       <body className="antialiased">
@@ -20,4 +20,6 @@ export default function RootLayout({
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

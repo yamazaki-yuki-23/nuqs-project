@@ -1,6 +1,9 @@
-export default function Home() {
+import FilterPanel from "./components/FilterPanel";
+
+const Home = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-8">
+      <FilterPanel />
       <main className="text-center space-y-6">
         <h1 className="text-4xl font-bold text-foreground mb-4">
           Welcome to Next.js
@@ -16,4 +19,6 @@ export default function Home() {
       </main>
     </div>
   );
-}
+};
+
+export default Home;
