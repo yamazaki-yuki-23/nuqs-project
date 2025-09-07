@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   createParser,
+  debounce,
   parseAsIndex,
   parseAsInteger,
   parseAsString,
@@ -35,10 +36,23 @@ const FilterPanel = () => {
       .withOptions({ shallow: false, scroll: false }),
     page: parseAsIndex
       .withDefault(0)
-      .withOptions({ shallow: false, scroll: false }),
+      .withOptions({ shallow: false, scroll: false, history: "push" }),
   });
 
-  const setCategory = useCallback(
+  const CATEGORY_DEBOUNCE_MS = 5000;
+
+  // 入力値をdebounceしてURLクエリを遅延更新する（空文字の場合は即時更新）
+  const setCategoryDebounced = useCallback(
+    (value: string) =>
+      setStates((prev) => ({ ...prev, category: value }), {
+        limitUrlUpdates:
+          value === "" ? undefined : debounce(CATEGORY_DEBOUNCE_MS),
+      }),
+    [setStates],
+  );
+
+  // Enterキーなど即時反映したい場合に使う（debounceなし）
+  const setCategoryImmediate = useCallback(
     (value: string) => setStates((prev) => ({ ...prev, category: value })),
     [setStates],
   );
@@ -61,7 +75,11 @@ const FilterPanel = () => {
         フィルター
       </h2>
       <div className="flex flex-col gap-4">
-        <Category category={states.category} setCategory={setCategory} />
+        <Category
+          category={states.category}
+          setCategory={setCategoryDebounced}
+          setCategoryImmediate={setCategoryImmediate}
+        />
         <TagSelector tags={states.tags} setTags={setTags} />
         <hr className="my-2 border-gray-300 dark:border-gray-700" />
         <div className="flex justify-center">
