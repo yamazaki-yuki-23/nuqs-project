@@ -10,7 +10,7 @@ import {
   useQueryStates,
 } from "nuqs";
 import { useCallback } from "react";
-import CategoryInput from "./CategoryInput";
+import Category from "./Category";
 import Counter from "./Counter";
 import Pagination from "./Pagination";
 import TagSelector from "./TagSelector";
@@ -60,7 +60,7 @@ const FilterPanel = () => {
         フィルター
       </h2>
       <div className="flex flex-col gap-4">
-        <CategoryInput category={states.category} setCategory={setCategory} />
+        <Category category={states.category} setCategory={setCategory} />
         <TagSelector tags={states.tags} setTags={setTags} />
         <hr className="my-2 border-gray-300 dark:border-gray-700" />
         <div className="flex justify-center">

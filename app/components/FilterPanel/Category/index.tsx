@@ -2,12 +2,12 @@
 
 import { memo } from "react";
 
-type CategoryInputProps = {
+type CategoryProps = {
   category: string;
   setCategory: (value: string) => void;
 };
 
-const CategoryInput = memo(({ category, setCategory }: CategoryInputProps) => {
+const Category = memo(({ category, setCategory }: CategoryProps) => {
   return (
     <div className="flex gap-4 items-center">
       <label htmlFor="category" className="font-medium">
@@ -24,4 +24,4 @@ const CategoryInput = memo(({ category, setCategory }: CategoryInputProps) => {
   );
 });
 
-export default CategoryInput;
+export default Category;
