@@ -17,7 +17,8 @@ import TagSelector from "./TagSelector";
 
 const parseAsTags = createParser<string[]>({
   parse: (value) => (value ? value.split("+") : []),
-  serialize: (value) => value.join("+"),
+  serialize: (value) =>
+    (value && value.length > 0 ? value.join("+") : null) as string,
 });
 
 const FilterPanel = () => {
