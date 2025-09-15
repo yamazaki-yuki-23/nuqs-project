@@ -17,7 +17,7 @@ const ResultPanel = () => {
           <span className="font-bold">カウント:</span> {count}
         </li>
         <li>
-          <span className="font-bold">ページ:</span> {page}
+          <span className="font-bold">ページ:</span> {page + 1}
         </li>
       </ul>
     </div>
