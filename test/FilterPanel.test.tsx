@@ -2,12 +2,12 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { NuqsTestingAdapter, type UrlUpdateEvent } from "nuqs/adapters/testing";
 import type { ReactNode } from "react";
-import { describe, expect, it, type Mock, vi } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import FilterPanel from "@/app/components/FilterPanel";
 
 type RenderOptions = {
   searchParams?: string;
-  onUrlUpdate?: Mock<[UrlUpdateEvent], void>;
+  onUrlUpdate?: ReturnType<typeof vi.fn>;
 };
 
 const renderFilterPanel = ({
@@ -37,7 +37,7 @@ describe("FilterPanel", () => {
 
   it("updates the category immediately when pressing Enter", async () => {
     const user = userEvent.setup();
-    const onUrlUpdate = vi.fn<[UrlUpdateEvent]>();
+    const onUrlUpdate = vi.fn<(...args: [UrlUpdateEvent]) => void>();
 
     renderFilterPanel({ searchParams: "?category=old", onUrlUpdate });
 
@@ -46,8 +46,7 @@ describe("FilterPanel", () => {
     await user.type(input, "nuqs{enter}");
 
     expect(onUrlUpdate).toHaveBeenCalled();
-    const lastCall =
-      onUrlUpdate.mock.calls[onUrlUpdate.mock.calls.length - 1][0];
+    const [[lastCall]] = onUrlUpdate.mock.calls.slice(-1);
     expect(lastCall.queryString).toBe("?category=nuqs");
     expect(lastCall.searchParams.get("category")).toBe("nuqs");
     expect(lastCall.options.history).toBe("replace");
@@ -55,7 +54,7 @@ describe("FilterPanel", () => {
 
   it("syncs tag selection with the query string", async () => {
     const user = userEvent.setup();
-    const onUrlUpdate = vi.fn<[UrlUpdateEvent]>();
+    const onUrlUpdate = vi.fn<(...args: [UrlUpdateEvent]) => void>();
 
     renderFilterPanel({ searchParams: "?tags=React", onUrlUpdate });
 
@@ -63,36 +62,32 @@ describe("FilterPanel", () => {
     await user.click(nuqsCheckbox);
 
     expect(onUrlUpdate).toHaveBeenCalled();
-    const updateAfterAdd =
-      onUrlUpdate.mock.calls[onUrlUpdate.mock.calls.length - 1][0];
+    const [[updateAfterAdd]] = onUrlUpdate.mock.calls.slice(-1);
     expect(updateAfterAdd.queryString).toBe("?tags=React%2Bnuqs");
 
     const reactCheckbox = screen.getByLabelText("React");
     await user.click(reactCheckbox);
 
-    const updateAfterRemove =
-      onUrlUpdate.mock.calls[onUrlUpdate.mock.calls.length - 1][0];
+    const [[updateAfterRemove]] = onUrlUpdate.mock.calls.slice(-1);
     expect(updateAfterRemove.queryString).toBe("?tags=nuqs");
   });
 
   it("updates count and removes it from the URL when reset", async () => {
     const user = userEvent.setup();
-    const onUrlUpdate = vi.fn<[UrlUpdateEvent]>();
+    const onUrlUpdate = vi.fn<(...args: [UrlUpdateEvent]) => void>();
 
     renderFilterPanel({ searchParams: "?count=5", onUrlUpdate });
 
     const increment = screen.getByRole("button", { name: "+" });
     await user.click(increment);
 
-    const incrementUpdate =
-      onUrlUpdate.mock.calls[onUrlUpdate.mock.calls.length - 1][0];
+    const [[incrementUpdate]] = onUrlUpdate.mock.calls.slice(-1);
     expect(incrementUpdate.searchParams.get("count")).toBe("6");
 
     const reset = screen.getByRole("button", { name: "リセット" });
     await user.click(reset);
 
-    const resetUpdate =
-      onUrlUpdate.mock.calls[onUrlUpdate.mock.calls.length - 1][0];
+    const [[resetUpdate]] = onUrlUpdate.mock.calls.slice(-1);
     expect(resetUpdate.searchParams.get("count")).toBeNull();
     expect(resetUpdate.queryString).toBe("");
   });

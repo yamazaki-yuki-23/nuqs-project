@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  createParser,
   debounce,
   parseAsIndex,
   parseAsInteger,
@@ -11,16 +10,11 @@ import {
   useQueryStates,
 } from "nuqs";
 import { useCallback } from "react";
+import { parseAsTags } from "@/src/utils/nuqs";
 import Category from "./Category";
 import Counter from "./Counter";
 import Pagination from "./Pagination";
 import TagSelector from "./TagSelector";
-
-const parseAsTags = createParser<string[]>({
-  parse: (value) => (value ? value.split("+") : []),
-  serialize: (value) =>
-    (value && value.length > 0 ? value.join("+") : null) as string,
-});
 
 const FilterPanel = () => {
   const pathname = usePathname();

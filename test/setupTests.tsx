@@ -6,7 +6,7 @@ vi.mock("next/link", () => {
   const Link = forwardRef<
     HTMLAnchorElement,
     ComponentPropsWithoutRef<"a"> & { href: string }
-  >(({ children, href, scroll: _scroll, ...props }, ref) => (
+  >(({ children, href, ...props }, ref) => (
     <a ref={ref} href={href} {...props}>
       {children}
     </a>

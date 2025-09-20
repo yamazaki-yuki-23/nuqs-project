@@ -1,8 +1,7 @@
 "use client";
 
 import { memo, useCallback } from "react";
-
-const TAGS = ["React", "Next.js", "nuqs", "TypeScript", "Tailwind"];
+import { TAGS } from "@/src/constants/nuqs";
 
 type TagSelectorProps = {
   tags: string[];
