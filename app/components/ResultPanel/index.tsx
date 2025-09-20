@@ -1,4 +1,4 @@
-import { searchParamsCache } from "../searchParams";
+import { searchParamsCache } from "@/app/searchParams";
 
 const ResultPanel = () => {
   const { category, tags, count, page } = searchParamsCache.all();
