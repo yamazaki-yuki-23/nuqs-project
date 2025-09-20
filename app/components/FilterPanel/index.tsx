@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   createParser,
   debounce,
@@ -24,20 +24,19 @@ const parseAsTags = createParser<string[]>({
 
 const FilterPanel = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const [states, setStates] = useQueryStates({
     category: parseAsString
       .withDefault("")
-      .withOptions({ shallow: true, scroll: false }),
+      .withOptions({ shallow: false, scroll: false }),
     tags: parseAsTags
       .withDefault([])
-      .withOptions({ shallow: true, scroll: false }),
+      .withOptions({ shallow: false, scroll: false }),
     count: parseAsInteger
       .withDefault(0)
-      .withOptions({ shallow: true, scroll: false }),
+      .withOptions({ shallow: false, scroll: false }),
     page: parseAsIndex
       .withDefault(0)
-      .withOptions({ shallow: true, scroll: false }),
+      .withOptions({ shallow: false, scroll: false }),
   });
 
   const CATEGORY_DEBOUNCE_MS = 500;
@@ -49,39 +48,34 @@ const FilterPanel = () => {
         limitUrlUpdates:
           value === "" ? undefined : debounce(CATEGORY_DEBOUNCE_MS),
       });
-      router.refresh();
     },
-    [setStates, router],
+    [setStates],
   );
 
   // Enterキーなど即時反映したい場合に使う（debounceなし）
   const setCategoryImmediate = useCallback(
     async (value: string) => {
       await setStates((prev) => ({ ...prev, category: value }));
-      router.refresh();
     },
-    [setStates, router],
+    [setStates],
   );
   const setTags = useCallback(
     async (value: string[] | null) => {
       await setStates((prev) => ({ ...prev, tags: value }));
-      router.refresh();
     },
-    [setStates, router],
+    [setStates],
   );
   const setCount = useCallback(
     async (value: number | null) => {
       await setStates((prev) => ({ ...prev, count: value }));
-      router.refresh();
     },
-    [setStates, router],
+    [setStates],
   );
   const setPage = useCallback(
     async (value: number) => {
       await setStates((prev) => ({ ...prev, page: value }));
-      router.refresh();
     },
-    [setStates, router],
+    [setStates],
   );
 
   return (
