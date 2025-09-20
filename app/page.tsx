@@ -1,9 +1,10 @@
+import type { SearchParams } from "nuqs/server";
 import FilterPanel from "./components/FilterPanel";
 import ResultPanel from "./components/ResultPanel";
 import { searchParamsCache } from "./searchParams";
 
 type Props = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
+  searchParams: Promise<SearchParams>;
 };
 
 const Page = async ({ searchParams }: Props) => {
