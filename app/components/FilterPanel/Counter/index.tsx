@@ -28,7 +28,7 @@ const Counter = memo(({ count, setCount }: CounterProps) => {
         </button>
         <button
           type="button"
-          className="px-3 py-1 bg-gray-400 text-white rounded hover:bg-gray-500"
+          className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-800"
           onClick={() => setCount(null)}
         >
           リセット

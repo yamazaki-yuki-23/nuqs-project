@@ -4,7 +4,7 @@ const ResultPanel = () => {
   const { category, tags, count, page } = searchParamsCache.all();
   return (
     <div className="p-4 bg-gray-50 dark:bg-gray-800 rounded shadow">
-      <h3 className="text-lg font-bold mb-2">検索結果：</h3>
+      <h2 className="text-lg font-bold mb-2">検索結果：</h2>
       <ul className="text-xs text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-900 rounded p-2 overflow-x-auto">
         <li>
           <span className="font-bold">カテゴリ:</span> {category}
