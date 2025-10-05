@@ -1,6 +1,5 @@
 import type { SearchParams } from "nuqs/server";
 import FilterPanel from "./components/FilterPanel";
-import LinkPrefetchTest from "./components/LinkPrefetchTest";
 import ResultPanel from "./components/ResultPanel";
 import { searchParamsCache } from "./searchParams";
 
@@ -18,7 +17,6 @@ const Page = async ({ searchParams }: Props) => {
         </h1>
         <ResultPanel />
         <FilterPanel />
-        <LinkPrefetchTest />
       </main>
     </div>
   );
