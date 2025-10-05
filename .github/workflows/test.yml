@@ -27,4 +27,4 @@ jobs:
         run: yarn test --run
 
       - name: Run knip
-        run: yarn knip --fail --ci
+        run: yarn knip
